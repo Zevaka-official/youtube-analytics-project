@@ -1,14 +1,10 @@
 import json
-
-from googleapiclient.discovery import build
-import os
+from src.api_item import ApiItem
 from src.utils import printj
 
 
-class Channel:
+class Channel(ApiItem):
     """Класс для ютуб-канала"""
-    api_key: str = os.getenv('YT_API_KEY')
-    youtube = build('youtube', 'v3', developerKey=api_key)
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
@@ -42,7 +38,6 @@ class Channel:
     def __ge__(self, other):
         return self.subscriber_count >= other.subscriber_count
 
-
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
 
@@ -75,10 +70,6 @@ class Channel:
     @property
     def view_count(self):
         return self.__channel["items"][0]["statistics"]["viewCount"]
-
-    @classmethod
-    def get_service(cls):
-        return cls.youtube
 
     def to_json(self, filename):
         with open(filename, encoding='UTF-8', mode="w") as f:
